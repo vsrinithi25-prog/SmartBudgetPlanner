@@ -1,0 +1,2978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Budget Planner</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: auto;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: #172033;
+        }
+
+        .logo span {
+            color: #4f6ef7;
+        }
+
+        .header-tag {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: auto;
+            padding: 45px 24px 70px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #eef2ff, #ffffff);
+            border: 1px solid #e1e7ff;
+            border-radius: 24px;
+            padding: 42px;
+            margin-bottom: 35px;
+        }
+
+        .hero h1 {
+            font-size: 38px;
+            color: #182238;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            max-width: 650px;
+            color: #667085;
+            font-size: 16px;
+        }
+
+        .progress-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+
+        .progress-step {
+            width: 100%;
+            text-align: left;
+            font: inherit;
+            cursor: pointer;
+            transition: 0.2s;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .progress-step:hover {
+            border-color: #637df8;
+            background: #f8f9ff;
+            transform: translateY(-1px);
+        }
+
+        .progress-step:focus-visible {
+            outline: 3px solid rgba(99, 125, 248, 0.18);
+            outline-offset: 2px;
+        }
+
+        .progress-step strong {
+            display: block;
+            color: #1f2937;
+            margin-bottom: 3px;
+        }
+
+        .section {
+            scroll-margin-top: 95px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 22px;
+            padding: 30px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.035);
+        }
+
+        .section-header {
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 23px;
+            color: #172033;
+            margin-bottom: 5px;
+        }
+
+        .section-header p {
+            color: #7a8494;
+            font-size: 14px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        input,
+        select {
+            width: 100%;
+            border: 1px solid #d9dee8;
+            border-radius: 11px;
+            padding: 13px 14px;
+            background: #fff;
+            color: #1f2937;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #637df8;
+            box-shadow: 0 0 0 3px rgba(99, 125, 248, 0.10);
+        }
+
+        .input-with-symbol {
+            position: relative;
+        }
+
+        .input-with-symbol span {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .input-with-symbol input {
+            padding-left: 38px;
+        }
+
+        .savings-calculation {
+            margin-top: 25px;
+            background: #f7f8ff;
+            border: 1px solid #e1e5ff;
+            border-radius: 16px;
+            padding: 22px;
+        }
+
+        .savings-calculation h3 {
+            font-size: 17px;
+            margin-bottom: 15px;
+            color: #28355c;
+        }
+
+        .calculation-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .calculation-item {
+            background: white;
+            border: 1px solid #e7e9f2;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .calculation-item small {
+            color: #7b8494;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .calculation-item strong {
+            font-size: 19px;
+            color: #202b45;
+        }
+
+        .savings-update {
+            margin-top: 18px;
+            background: #f9fafb;
+            border: 1px solid #e3e7ed;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .savings-update h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .savings-update p {
+            color: #7a8494;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .savings-update-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .primary-btn {
+            border: none;
+            background: #4f6ef7;
+            color: white;
+            padding: 13px 19px;
+            border-radius: 11px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .primary-btn:hover {
+            background: #405ddd;
+            transform: translateY(-1px);
+        }
+
+        .secondary-btn {
+            border: 1px solid #d8deea;
+            background: white;
+            color: #374151;
+            padding: 12px 18px;
+            border-radius: 11px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .secondary-btn:hover {
+            background: #f8fafc;
+        }
+
+        .savings-progress {
+            margin-top: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #667085;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e9edf4;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4f6ef7;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .expense-controls {
+            display: grid;
+            grid-template-columns: 1.2fr 1.5fr auto;
+            gap: 12px;
+            align-items: end;
+            margin-bottom: 20px;
+        }
+
+        .expense-controls .input-with-symbol {
+            min-width: 0;
+            width: 100%;
+        }
+
+        .expense-controls .input-with-symbol input {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .custom-category-box {
+            display: none;
+            margin-bottom: 14px;
+        }
+
+        .custom-category-box.show {
+            display: block;
+        }
+
+        .expense-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .expense-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid #e4e8ef;
+            border-radius: 13px;
+            padding: 14px 16px;
+            background: #fbfcfe;
+        }
+
+        .expense-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .expense-icon {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            background: #eef2ff;
+            border-radius: 10px;
+        }
+
+        .expense-name strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        .expense-name small {
+            color: #8a93a1;
+            font-size: 12px;
+        }
+
+        .expense-amount {
+            font-weight: 800;
+            color: #27334d;
+        }
+
+        .expense-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .small-btn {
+            border: 1px solid #dfe4ec;
+            background: white;
+            border-radius: 8px;
+            padding: 6px 9px;
+            font-size: 12px;
+        }
+
+        .small-btn.delete {
+            color: #c24141;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .summary-card {
+            background: #fafbfc;
+            border: 1px solid #e5e8ee;
+            border-radius: 15px;
+            padding: 19px;
+        }
+
+        .summary-card small {
+            color: #7c8492;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .summary-card strong {
+            font-size: 22px;
+            color: #202a40;
+        }
+
+        .status-box {
+            margin-top: 20px;
+            padding: 18px 20px;
+            border-radius: 14px;
+            border: 1px solid #dce2ea;
+            background: #f8fafc;
+        }
+
+        .status-box h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .status-box p {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .status-within {
+            background: #f1faf5;
+            border-color: #cdebd8;
+        }
+
+        .status-attention {
+            background: #fff9ed;
+            border-color: #f3dfae;
+        }
+
+        .status-over {
+            background: #fff3f3;
+            border-color: #efcaca;
+        }
+
+        .recommendation-box {
+            display: none;
+            margin-top: 22px;
+            border: 1px solid #f0d8aa;
+            background: #fffaf0;
+            border-radius: 16px;
+            padding: 22px;
+        }
+
+        .recommendation-box.show {
+            display: block;
+        }
+
+        .recommendation-box h3 {
+            color: #7a5313;
+            margin-bottom: 6px;
+        }
+
+        .recommendation-box p {
+            color: #795f36;
+            font-size: 13px;
+            margin-bottom: 17px;
+        }
+
+        .recommendation-content {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .recommendation-content.show {
+            display: block;
+        }
+
+        .recommendation-table,
+        .planned-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .recommendation-table th,
+        .recommendation-table td,
+        .planned-table th,
+        .planned-table td {
+            text-align: left;
+            padding: 12px 10px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+        }
+
+        .recommendation-table th,
+        .planned-table th {
+            color: #687386;
+            font-weight: 700;
+        }
+
+        .recommendation-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .planned-section {
+            margin-top: 28px;
+        }
+
+        .planned-table-wrapper {
+            display: none;
+            margin-top: 18px;
+            overflow-x: auto;
+        }
+
+        .planned-table-wrapper.show {
+            display: block;
+        }
+
+        .close-table {
+            margin-top: 14px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .overview-card {
+            background: #fafbfc;
+            border: 1px solid #e3e7ee;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .overview-card small {
+            display: block;
+            color: #788292;
+            margin-bottom: 5px;
+        }
+
+        .overview-card strong {
+            font-size: 19px;
+            color: #202a40;
+        }
+
+        .chart-section {
+            margin-top: 28px;
+        }
+
+        .chart-item {
+            margin-bottom: 17px;
+        }
+
+        .chart-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .chart-track {
+            height: 9px;
+            background: #edf0f5;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .chart-fill {
+            height: 100%;
+            background: #6178ed;
+            border-radius: 20px;
+        }
+
+        .bottom-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 28px;
+        }
+
+        footer {
+            background: #172033;
+            color: white;
+            padding: 35px 24px;
+            text-align: center;
+        }
+
+        footer strong {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        footer p {
+            color: #aab2c0;
+            font-size: 13px;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 25px;
+            color: #8a93a1;
+            font-size: 14px;
+            border: 1px dashed #d9dee8;
+            border-radius: 13px;
+        }
+
+        @media (max-width: 950px) {
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-container {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .expense-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .expense-item {
+                grid-template-columns: 1fr;
+            }
+
+            .expense-amount {
+                text-align: left;
+            }
+
+            .calculation-row {
+                grid-template-columns: 1fr;
+            }
+
+            .savings-update-row {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            main {
+                padding: 25px 14px 50px;
+            }
+
+            .hero {
+                padding: 28px 22px;
+            }
+
+            .hero h1 {
+                font-size: 29px;
+            }
+
+            .section {
+                padding: 21px;
+            }
+
+            .summary-grid,
+            .overview-grid,
+            .progress-container {
+                grid-template-columns: 1fr;
+            }
+
+            .header-inner {
+                padding: 15px;
+            }
+
+            .header-tag {
+                display: none;
+            }
+
+        }
+
+        @media print {
+
+            header,
+            .progress-container,
+            .bottom-actions,
+            .recommendation-actions,
+            footer,
+            button {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            main {
+                max-width: none;
+                padding: 0;
+            }
+
+            .section {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="header-inner">
+
+        <div class="logo">
+            Smart <span>Budget Planner</span>
+        </div>
+
+        <div class="header-tag">
+            Plan smarter. Spend intentionally.
+        </div>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <section class="hero">
+
+        <h1>Take control of your money.</h1>
+
+        <p>
+            Plan your income, savings and expenses in one place.
+            Smart Budget Planner helps you understand where your money
+            goes and how much you can comfortably spend.
+        </p>
+
+    </section>
+
+
+    <div class="progress-container">
+
+        <button class="progress-step" type="button" onclick="goToSection('incomeSavingsSection')">
+
+            <strong>01 Income & Savings</strong>
+
+            Set your financial starting point.
+
+        </button>
+
+
+        <button class="progress-step" type="button" onclick="goToSection('expensesSection')">
+
+            <strong>02 Expenses</strong>
+
+            Plan your monthly spending.
+
+        </button>
+
+
+        <button class="progress-step" type="button" onclick="goToSection('budgetReviewSection')">
+
+            <strong>03 Budget Review</strong>
+
+            Check whether your plan fits.
+
+        </button>
+
+
+        <button class="progress-step" type="button" onclick="goToSection('financialOverviewSection')">
+
+            <strong>04 Financial Overview</strong>
+
+            See your complete picture.
+
+        </button>
+
+    </div>
+
+
+    <section class="section" id="incomeSavingsSection">
+
+        <div class="section-header">
+
+            <h2>Income & Savings</h2>
+
+            <p>
+                Start by entering your income and savings goal.
+            </p>
+
+        </div>
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label for="currency">
+                    Currency
+                </label>
+
+                <select id="currency" onchange="currencyChanged()">
+
+                    <option value="INR">🇮🇳 INR — Indian Rupee</option>
+                    <option value="USD">🇺🇸 USD — US Dollar</option>
+                    <option value="EUR">🇪🇺 EUR — Euro</option>
+                    <option value="GBP">🇬🇧 GBP — British Pound</option>
+                    <option value="JPY">🇯🇵 JPY — Japanese Yen</option>
+                    <option value="CNY">🇨🇳 CNY — Chinese Yuan</option>
+                    <option value="CAD">🇨🇦 CAD — Canadian Dollar</option>
+                    <option value="AUD">🇦🇺 AUD — Australian Dollar</option>
+                    <option value="SGD">🇸🇬 SGD — Singapore Dollar</option>
+                    <option value="AED">🇦🇪 AED — UAE Dirham</option>
+                    <option value="CHF">🇨🇭 CHF — Swiss Franc</option>
+                    <option value="KRW">🇰🇷 KRW — South Korean Won</option>
+                    <option value="NZD">🇳🇿 NZD — New Zealand Dollar</option>
+                    <option value="ZAR">🇿🇦 ZAR — South African Rand</option>
+                    <option value="BRL">🇧🇷 BRL — Brazilian Real</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="income">
+                    Monthly Income
+                </label>
+
+                <div class="input-with-symbol">
+
+                    <span id="incomeSymbol">₹</span>
+
+                    <input
+                        type="number"
+                        id="income"
+                        placeholder="30000"
+                        min="0"
+                        oninput="updatePlanner()"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="goal">
+                    Savings Goal
+                </label>
+
+                <div class="input-with-symbol">
+
+                    <span id="goalSymbol">₹</span>
+
+                    <input
+                        type="number"
+                        id="goal"
+                        placeholder="20000"
+                        min="0"
+                        oninput="updatePlanner()"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="purpose">
+                    What are you saving for?
+                </label>
+
+                <select id="purpose" onchange="updatePlanner()">
+
+                    <option value="">Select a purpose</option>
+                    <option>Education</option>
+                    <option>Work</option>
+                    <option>Health</option>
+                    <option>Travel</option>
+                    <option>Home</option>
+                    <option>Other</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="alreadySaved">
+                    Already Saved
+                </label>
+
+                <div class="input-with-symbol">
+
+                    <span id="savedSymbol">₹</span>
+
+                    <input
+                        type="number"
+                        id="alreadySaved"
+                        placeholder="5000"
+                        min="0"
+                        oninput="updatePlanner()"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="timeline">
+                    Savings Timeline
+                </label>
+
+                <select id="timeline" onchange="updatePlanner()">
+
+                    <option value="">No specific deadline</option>
+                    <option value="days">Days</option>
+                    <option value="months">Months</option>
+                    <option value="years">Years</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group" id="timelineAmountGroup" style="display:none;">
+
+                <label for="timelineAmount">
+                    Timeline Amount
+                </label>
+
+                <input
+                    type="number"
+                    id="timelineAmount"
+                    placeholder="5"
+                    min="1"
+                    oninput="updatePlanner()"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="savings-calculation">
+
+            <h3>Your Savings Plan</h3>
+
+            <div class="calculation-row">
+
+                <div class="calculation-item">
+
+                    <small>
+                        Goal
+                    </small>
+
+                    <strong id="goalDisplay">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+                <div class="calculation-item">
+
+                    <small>
+                        Already Saved
+                    </small>
+
+                    <strong id="savedDisplay">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+                <div class="calculation-item">
+
+                    <small>
+                        Remaining
+                    </small>
+
+                    <strong id="remainingDisplay">
+                        ₹0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="savings-update">
+
+                <h3>
+                    Update Your Savings
+                </h3>
+
+                <p>
+                    Add money you have saved since creating this plan.
+                </p>
+
+                <div class="savings-update-row">
+
+                    <div class="form-group">
+
+                        <label for="savedNow">
+                            Amount Saved Now
+                        </label>
+
+                        <div class="input-with-symbol">
+
+                            <span id="savedNowSymbol">₹</span>
+
+                            <input
+                                type="number"
+                                id="savedNow"
+                                placeholder="1000"
+                                min="0"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="primary-btn"
+                        type="button"
+                        onclick="addSavings()"
+                    >
+                        + Add to Savings
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="savings-progress">
+
+                <div class="progress-label">
+
+                    <span>
+                        Savings Progress
+                    </span>
+
+                    <span id="savingsPercentage">
+                        0%
+                    </span>
+
+                </div>
+
+                <div class="progress-bar">
+
+                    <div
+                        class="progress-fill"
+                        id="savingsProgressFill"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="expensesSection">
+
+        <div class="section-header">
+
+            <h2>
+                Plan Your Expenses
+            </h2>
+
+            <p>
+                Add the expenses you expect to have this month.
+            </p>
+
+        </div>
+
+
+        <div class="expense-controls">
+
+            <div class="form-group">
+
+                <label for="expenseCategory">
+                    Category
+                </label>
+
+                <select
+                    id="expenseCategory"
+                    onchange="toggleCustomCategory()"
+                >
+
+                    <option value="Food">🍔 Food</option>
+                    <option value="Travel">✈️ Travel</option>
+                    <option value="Shopping">🛍️ Shopping</option>
+                    <option value="Hotel">🏨 Hotel</option>
+                    <option value="Rent">🏠 Rent</option>
+                    <option value="Education">🎓 Education</option>
+                    <option value="Transport">🚌 Transport</option>
+                    <option value="Bills">💳 Bills</option>
+                    <option value="Health">❤️ Health</option>
+                    <option value="Other">📦 Other</option>
+                    <option value="custom">✏️ Write your own category</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="expenseAmount">
+                    Amount
+                </label>
+
+                <div class="input-with-symbol">
+
+                    <span id="expenseSymbol">₹</span>
+
+                    <input
+                        type="number"
+                        id="expenseAmount"
+                        placeholder="2500"
+                        min="0"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                type="button"
+                onclick="addExpense()"
+            >
+                Add Expense
+            </button>
+
+        </div>
+
+
+        <div
+            class="custom-category-box"
+            id="customCategoryBox"
+        >
+
+            <div class="form-group">
+
+                <label for="customCategory">
+                    Write Your Own Category
+                </label>
+
+                <input
+                    type="text"
+                    id="customCategory"
+                    placeholder="Example: Gym, Gifts, Internet..."
+                >
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="expense-list"
+            id="expenseList"
+        >
+
+            <div class="empty-message">
+                No expenses added yet.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="budgetReviewSection">
+
+        <div class="section-header">
+
+            <h2>
+                Live Budget Summary
+            </h2>
+
+            <p>
+                Your budget updates automatically as you enter information.
+            </p>
+
+        </div>
+
+
+        <div class="summary-grid">
+
+            <div class="summary-card">
+
+                <small>
+                    Monthly Income
+                </small>
+
+                <strong id="summaryIncome">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <small>
+                    Planned Savings
+                </small>
+
+                <strong id="summarySavings">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <small>
+                    Total Expenses
+                </small>
+
+                <strong id="summaryExpenses">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <small>
+                    Money Remaining
+                </small>
+
+                <strong id="summaryRemaining">
+                    ₹0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="status-box"
+            id="statusBox"
+        >
+
+            <h3 id="statusTitle">
+                Add your income and expenses
+            </h3>
+
+            <p id="statusMessage">
+                Your budget status will appear here.
+            </p>
+
+        </div>
+
+
+        <div
+            class="recommendation-box"
+            id="recommendationBox"
+        >
+
+            <h3>
+                Your expenses are above your budget.
+            </h3>
+
+            <p id="recommendationMessage">
+                Your planned expenses are above the amount available after savings.
+            </p>
+
+            <button
+                class="primary-btn"
+                type="button"
+                onclick="showRecommendations()"
+            >
+                Show Our Recommended Budget
+            </button>
+
+
+            <div
+                class="recommendation-content"
+                id="recommendationContent"
+            >
+
+                <div id="recommendationTableContainer"></div>
+
+                <div class="recommendation-actions">
+
+                    <button
+                        class="primary-btn"
+                        type="button"
+                        onclick="applyRecommendedBudget()"
+                    >
+                        Apply Recommended Budget
+                    </button>
+
+                    <button
+                        class="secondary-btn"
+                        type="button"
+                        onclick="keepMyBudget()"
+                    >
+                        Keep My Budget
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="planned-section">
+
+            <button
+                class="secondary-btn"
+                type="button"
+                id="plannedToggleBtn"
+                onclick="togglePlannedTable()"
+            >
+                View Planned vs Suggested
+            </button>
+
+
+            <div
+                class="planned-table-wrapper"
+                id="plannedTableWrapper"
+            >
+
+                <div id="plannedTableContainer"></div>
+
+                <button
+                    class="secondary-btn close-table"
+                    type="button"
+                    onclick="togglePlannedTable()"
+                >
+                    Close Planned vs Suggested
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="financialOverviewSection">
+
+        <div class="section-header">
+
+            <h2>
+                Financial Overview
+            </h2>
+
+            <p>
+                A complete view of your current monthly financial plan.
+            </p>
+
+        </div>
+
+
+        <div class="overview-grid">
+
+            <div class="overview-card">
+
+                <small>
+                    Monthly Income
+                </small>
+
+                <strong id="overviewIncome">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="overview-card">
+
+                <small>
+                    Planned Savings
+                </small>
+
+                <strong id="overviewSavings">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="overview-card">
+
+                <small>
+                    Total Expenses
+                </small>
+
+                <strong id="overviewExpenses">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="overview-card">
+
+                <small>
+                    Money Remaining
+                </small>
+
+                <strong id="overviewRemaining">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="overview-card">
+
+                <small>
+                    Daily Spending Limit
+                </small>
+
+                <strong id="dailyLimit">
+                    ₹0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-section">
+
+            <div class="section-header">
+
+                <h2>
+                    Expense Breakdown
+                </h2>
+
+                <p>
+                    See how your planned spending is distributed.
+                </p>
+
+            </div>
+
+            <div id="expenseChart">
+
+                <div class="empty-message">
+                    Add expenses to see your breakdown.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="bottom-actions">
+
+            <button
+                class="primary-btn"
+                type="button"
+                onclick="saveBudget()"
+            >
+                Save Budget
+            </button>
+
+            <button
+                class="secondary-btn"
+                type="button"
+                onclick="loadBudget()"
+            >
+                Load Saved Budget
+            </button>
+
+            <button
+                class="secondary-btn"
+                type="button"
+                onclick="clearSavedInformation()"
+            >
+                Clear Saved Information
+            </button>
+
+            <button
+                class="secondary-btn"
+                type="button"
+                onclick="startNewBudget()"
+            >
+                Start New Budget
+            </button>
+
+            <button
+                class="secondary-btn"
+                type="button"
+                onclick="window.print()"
+            >
+                Print / Download
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <strong>
+        Smart Budget Planner
+    </strong>
+
+    <p>
+        Plan smarter. Spend intentionally.
+    </p>
+
+</footer>
+
+
+<script>
+
+    let expenses = [];
+    let editingExpenseIndex = -1;
+
+    const currencySymbols = {
+
+        INR: "₹",
+        USD: "$",
+        EUR: "€",
+        GBP: "£",
+        JPY: "¥",
+        CNY: "¥",
+        CAD: "C$",
+        AUD: "A$",
+        SGD: "S$",
+        AED: "د.إ",
+        CHF: "CHF",
+        KRW: "₩",
+        NZD: "NZ$",
+        ZAR: "R",
+        BRL: "R$"
+
+    };
+
+
+    const categoryWeights = {
+
+        Food: 0.18,
+        Travel: 0.10,
+        Shopping: 0.08,
+        Hotel: 0.08,
+        Rent: 0.30,
+        Education: 0.10,
+        Transport: 0.08,
+        Bills: 0.12,
+        Health: 0.08,
+        Other: 0.06
+
+    };
+
+
+    function goToSection(id) {
+
+        const section = document.getElementById(id);
+
+        if (section) {
+
+            section.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }
+
+    }
+
+
+    function getCurrency() {
+
+        return document.getElementById("currency").value;
+
+    }
+
+
+    function getSymbol() {
+
+        return currencySymbols[getCurrency()] || "₹";
+
+    }
+
+
+    function formatMoney(value) {
+
+        const symbol = getSymbol();
+
+        const number = Number(value) || 0;
+
+        return symbol + number.toLocaleString(undefined, {
+            maximumFractionDigits: 2
+        });
+
+    }
+
+
+    function currencyChanged() {
+
+        const symbol = getSymbol();
+
+        document.getElementById("incomeSymbol").textContent = symbol;
+        document.getElementById("goalSymbol").textContent = symbol;
+        document.getElementById("savedSymbol").textContent = symbol;
+        document.getElementById("savedNowSymbol").textContent = symbol;
+        document.getElementById("expenseSymbol").textContent = symbol;
+
+        updatePlanner();
+
+    }
+
+
+    function toggleTimelineAmount() {
+
+        const timeline = document.getElementById("timeline").value;
+
+        const group = document.getElementById("timelineAmountGroup");
+
+        if (timeline) {
+
+            group.style.display = "flex";
+
+        } else {
+
+            group.style.display = "none";
+
+        }
+
+    }
+
+
+    function toggleCustomCategory() {
+
+        const category =
+            document.getElementById("expenseCategory").value;
+
+        const box =
+            document.getElementById("customCategoryBox");
+
+        if (category === "custom") {
+
+            box.classList.add("show");
+
+        } else {
+
+            box.classList.remove("show");
+
+        }
+
+    }
+
+
+    function getDaysLeftInMonth() {
+
+        const now = new Date();
+
+        const year = now.getFullYear();
+
+        const month = now.getMonth();
+
+        const lastDay = new Date(year, month + 1, 0).getDate();
+
+        return Math.max(lastDay - now.getDate() + 1, 1);
+
+    }
+
+
+    function getMonthlySavingRequirement() {
+
+        const goal =
+            Number(document.getElementById("goal").value) || 0;
+
+        const alreadySaved =
+            Number(document.getElementById("alreadySaved").value) || 0;
+
+        const timeline =
+            document.getElementById("timeline").value;
+
+        const timelineAmount =
+            Number(document.getElementById("timelineAmount").value) || 0;
+
+        const remaining = Math.max(goal - alreadySaved, 0);
+
+        if (remaining <= 0) {
+
+            return 0;
+
+        }
+
+        if (!timeline || !timelineAmount) {
+
+            return 0;
+
+        }
+
+        if (timeline === "days") {
+
+            const months = timelineAmount / 30;
+
+            return months > 0 ? remaining / months : 0;
+
+        }
+
+        if (timeline === "months") {
+
+            return remaining / timelineAmount;
+
+        }
+
+        if (timeline === "years") {
+
+            return remaining / (timelineAmount * 12);
+
+        }
+
+        return 0;
+
+    }
+
+
+    function updateSavingsDisplay() {
+
+        const goal =
+            Number(document.getElementById("goal").value) || 0;
+
+        const saved =
+            Number(document.getElementById("alreadySaved").value) || 0;
+
+        const remaining =
+            Math.max(goal - saved, 0);
+
+        document.getElementById("goalDisplay").textContent =
+            formatMoney(goal);
+
+        document.getElementById("savedDisplay").textContent =
+            formatMoney(saved);
+
+        document.getElementById("remainingDisplay").textContent =
+            formatMoney(remaining);
+
+
+        let percentage = 0;
+
+        if (goal > 0) {
+
+            percentage = Math.min((saved / goal) * 100, 100);
+
+        }
+
+        document.getElementById("savingsPercentage").textContent =
+            Math.round(percentage) + "%";
+
+        document.getElementById("savingsProgressFill").style.width =
+            percentage + "%";
+
+    }
+
+
+    function addSavings() {
+
+        const amount =
+            Number(document.getElementById("savedNow").value) || 0;
+
+        if (amount <= 0) {
+
+            alert("Please enter a valid savings amount.");
+
+            return;
+
+        }
+
+        const alreadySavedInput =
+            document.getElementById("alreadySaved");
+
+        const currentSaved =
+            Number(alreadySavedInput.value) || 0;
+
+        alreadySavedInput.value =
+            currentSaved + amount;
+
+        document.getElementById("savedNow").value = "";
+
+        updatePlanner();
+
+    }
+
+
+    function addExpense() {
+
+        const categoryValue =
+            document.getElementById("expenseCategory").value;
+
+        let category = categoryValue;
+
+        if (categoryValue === "custom") {
+
+            category =
+                document.getElementById("customCategory").value.trim();
+
+            if (!category) {
+
+                alert("Please enter your own category.");
+
+                return;
+
+            }
+
+        }
+
+        const amount =
+            Number(document.getElementById("expenseAmount").value) || 0;
+
+        if (!category || amount <= 0) {
+
+            alert("Please enter a valid category and amount.");
+
+            return;
+
+        }
+
+
+        const expense = {
+
+            category: category,
+            amount: amount
+
+        };
+
+
+        if (editingExpenseIndex >= 0) {
+
+            expenses[editingExpenseIndex] = expense;
+
+            editingExpenseIndex = -1;
+
+        } else {
+
+            expenses.push(expense);
+
+        }
+
+
+        document.getElementById("expenseAmount").value = "";
+
+        document.getElementById("customCategory").value = "";
+
+        document.getElementById("expenseCategory").value = "Food";
+
+        toggleCustomCategory();
+
+        renderExpenses();
+
+        updatePlanner();
+
+    }
+
+
+    function editExpense(index) {
+
+        const expense = expenses[index];
+
+        editingExpenseIndex = index;
+
+
+        const presetCategories = [
+
+            "Food",
+            "Travel",
+            "Shopping",
+            "Hotel",
+            "Rent",
+            "Education",
+            "Transport",
+            "Bills",
+            "Health",
+            "Other"
+
+        ];
+
+
+        if (presetCategories.includes(expense.category)) {
+
+            document.getElementById("expenseCategory").value =
+                expense.category;
+
+            document.getElementById("customCategory").value = "";
+
+        } else {
+
+            document.getElementById("expenseCategory").value =
+                "custom";
+
+            document.getElementById("customCategory").value =
+                expense.category;
+
+        }
+
+
+        document.getElementById("expenseAmount").value =
+            expense.amount;
+
+        toggleCustomCategory();
+
+        goToSection("expensesSection");
+
+    }
+
+
+    function deleteExpense(index) {
+
+        if (!confirm("Delete this expense?")) {
+
+            return;
+
+        }
+
+        expenses.splice(index, 1);
+
+        renderExpenses();
+
+        updatePlanner();
+
+    }
+
+
+    function getCategoryIcon(category) {
+
+        const icons = {
+
+            Food: "🍔",
+            Travel: "✈️",
+            Shopping: "🛍️",
+            Hotel: "🏨",
+            Rent: "🏠",
+            Education: "🎓",
+            Transport: "🚌",
+            Bills: "💳",
+            Health: "❤️",
+            Other: "📦"
+
+        };
+
+        return icons[category] || "✏️";
+
+    }
+
+
+    function renderExpenses() {
+
+        const list =
+            document.getElementById("expenseList");
+
+
+        if (expenses.length === 0) {
+
+            list.innerHTML = `
+                <div class="empty-message">
+                    No expenses added yet.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        list.innerHTML = expenses.map((expense, index) => {
+
+            return `
+
+                <div class="expense-item">
+
+                    <div class="expense-name">
+
+                        <div class="expense-icon">
+                            ${getCategoryIcon(expense.category)}
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                ${escapeHTML(expense.category)}
+                            </strong>
+
+                            <small>
+                                Monthly expense
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="expense-amount">
+                        ${formatMoney(expense.amount)}
+                    </div>
+
+
+                    <div class="expense-actions">
+
+                        <button
+                            class="small-btn"
+                            type="button"
+                            onclick="editExpense(${index})"
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            class="small-btn delete"
+                            type="button"
+                            onclick="deleteExpense(${index})"
+                        >
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+    }
+
+
+    function escapeHTML(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    function getTotalExpenses() {
+
+        return expenses.reduce(
+            (total, expense) => total + Number(expense.amount || 0),
+            0
+        );
+
+    }
+
+
+    function getCategoryTotals() {
+
+        const totals = {};
+
+        expenses.forEach(expense => {
+
+            if (!totals[expense.category]) {
+
+                totals[expense.category] = 0;
+
+            }
+
+            totals[expense.category] +=
+                Number(expense.amount) || 0;
+
+        });
+
+        return totals;
+
+    }
+
+
+    function getAvailableBudget() {
+
+        const income =
+            Number(document.getElementById("income").value) || 0;
+
+        const savingRequirement =
+            getMonthlySavingRequirement();
+
+        return Math.max(income - savingRequirement, 0);
+
+    }
+
+
+    function updatePlanner() {
+
+        toggleTimelineAmount();
+
+        updateSavingsDisplay();
+
+        const income =
+            Number(document.getElementById("income").value) || 0;
+
+        const plannedSavings =
+            getMonthlySavingRequirement();
+
+        const totalExpenses =
+            getTotalExpenses();
+
+        const availableBudget =
+            Math.max(income - plannedSavings, 0);
+
+        const remaining =
+            income - plannedSavings - totalExpenses;
+
+
+        document.getElementById("summaryIncome").textContent =
+            formatMoney(income);
+
+        document.getElementById("summarySavings").textContent =
+            formatMoney(plannedSavings);
+
+        document.getElementById("summaryExpenses").textContent =
+            formatMoney(totalExpenses);
+
+        document.getElementById("summaryRemaining").textContent =
+            formatMoney(remaining);
+
+
+        document.getElementById("overviewIncome").textContent =
+            formatMoney(income);
+
+        document.getElementById("overviewSavings").textContent =
+            formatMoney(plannedSavings);
+
+        document.getElementById("overviewExpenses").textContent =
+            formatMoney(totalExpenses);
+
+        document.getElementById("overviewRemaining").textContent =
+            formatMoney(remaining);
+
+
+        const daysLeft =
+            getDaysLeftInMonth();
+
+        const dailySpendingLimit =
+            Math.max(availableBudget - totalExpenses, 0) / daysLeft;
+
+        document.getElementById("dailyLimit").textContent =
+            formatMoney(dailySpendingLimit);
+
+
+        updateStatus(
+            income,
+            plannedSavings,
+            totalExpenses,
+            availableBudget,
+            remaining
+        );
+
+        renderExpenseChart();
+
+        renderPlannedTable();
+
+        if (totalExpenses > availableBudget) {
+
+            document
+                .getElementById("recommendationBox")
+                .classList.add("show");
+
+            const overAmount =
+                totalExpenses - availableBudget;
+
+            document.getElementById("recommendationMessage").textContent =
+                "You are currently " +
+                formatMoney(overAmount) +
+                " over the amount available after savings.";
+
+        } else {
+
+            document
+                .getElementById("recommendationBox")
+                .classList.remove("show");
+
+            document
+                .getElementById("recommendationContent")
+                .classList.remove("show");
+
+        }
+
+    }
+
+
+    function updateStatus(
+        income,
+        plannedSavings,
+        totalExpenses,
+        availableBudget,
+        remaining
+    ) {
+
+        const statusBox =
+            document.getElementById("statusBox");
+
+        const title =
+            document.getElementById("statusTitle");
+
+        const message =
+            document.getElementById("statusMessage");
+
+
+        statusBox.className = "status-box";
+
+
+        if (income <= 0) {
+
+            title.textContent =
+                "Add your income and expenses";
+
+            message.textContent =
+                "Enter your monthly income to start tracking your budget.";
+
+            return;
+
+        }
+
+
+        if (totalExpenses > availableBudget) {
+
+            statusBox.classList.add("status-over");
+
+            title.textContent =
+                "Over Budget";
+
+            message.textContent =
+                "Your planned expenses are above your available budget.";
+
+            return;
+
+        }
+
+
+        const usagePercentage =
+            availableBudget > 0
+                ? (totalExpenses / availableBudget) * 100
+                : 0;
+
+
+        if (usagePercentage >= 85) {
+
+            statusBox.classList.add("status-attention");
+
+            title.textContent =
+                "Needs Attention";
+
+            message.textContent =
+                "You are using " +
+                Math.round(usagePercentage) +
+                "% of the amount available after savings.";
+
+        } else {
+
+            statusBox.classList.add("status-within");
+
+            title.textContent =
+                "Within Plan";
+
+            message.textContent =
+                "Your planned spending currently fits within your available budget.";
+
+        }
+
+    }
+
+
+    function showRecommendations() {
+
+        const content =
+            document.getElementById("recommendationContent");
+
+        content.classList.add("show");
+
+        renderRecommendationTable();
+
+    }
+
+
+    function getRecommendedAmount(category, budget) {
+
+        const weight =
+            categoryWeights[category] || 0.06;
+
+        return budget * weight;
+
+    }
+
+
+    function renderRecommendationTable() {
+
+        const container =
+            document.getElementById("recommendationTableContainer");
+
+        const budget =
+            getAvailableBudget();
+
+        const totals =
+            getCategoryTotals();
+
+        const categories =
+            Object.keys(totals);
+
+
+        if (categories.length === 0) {
+
+            container.innerHTML = `
+                <div class="empty-message">
+                    Add expenses to receive recommendations.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        let rows = "";
+
+
+        categories.forEach(category => {
+
+            const planned =
+                totals[category];
+
+            const suggested =
+                getRecommendedAmount(category, budget);
+
+            const difference =
+                suggested - planned;
+
+
+            rows += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHTML(category)}
+                    </td>
+
+                    <td>
+                        ${formatMoney(suggested)}
+                    </td>
+
+                    <td>
+                        ${formatMoney(planned)}
+                    </td>
+
+                    <td>
+                        ${formatMoney(difference)}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+        container.innerHTML = `
+
+            <table class="recommendation-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Suggested
+                        </th>
+
+                        <th>
+                            Your Plan
+                        </th>
+
+                        <th>
+                            Difference
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${rows}
+
+                </tbody>
+
+            </table>
+
+        `;
+
+    }
+
+
+    function renderPlannedTable() {
+
+        const container =
+            document.getElementById("plannedTableContainer");
+
+        const budget =
+            getAvailableBudget();
+
+        const totals =
+            getCategoryTotals();
+
+        const categories =
+            Object.keys(totals);
+
+
+        if (categories.length === 0) {
+
+            container.innerHTML = `
+                <div class="empty-message">
+                    Add expenses to compare your plan.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        let rows = "";
+
+
+        categories.forEach(category => {
+
+            const planned =
+                totals[category];
+
+            const suggested =
+                getRecommendedAmount(category, budget);
+
+            const difference =
+                planned - suggested;
+
+
+            rows += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHTML(category)}
+                    </td>
+
+                    <td>
+                        ${formatMoney(suggested)}
+                    </td>
+
+                    <td>
+                        ${formatMoney(planned)}
+                    </td>
+
+                    <td>
+                        ${formatMoney(difference)}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+        container.innerHTML = `
+
+            <table class="planned-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Suggested
+                        </th>
+
+                        <th>
+                            Your Plan
+                        </th>
+
+                        <th>
+                            Difference
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${rows}
+
+                </tbody>
+
+            </table>
+
+        `;
+
+    }
+
+
+    function togglePlannedTable() {
+
+        const wrapper =
+            document.getElementById("plannedTableWrapper");
+
+        const button =
+            document.getElementById("plannedToggleBtn");
+
+
+        wrapper.classList.toggle("show");
+
+
+        if (wrapper.classList.contains("show")) {
+
+            button.style.display = "none";
+
+        } else {
+
+            button.style.display = "inline-block";
+
+        }
+
+    }
+
+
+    function applyRecommendedBudget() {
+
+        const budget =
+            getAvailableBudget();
+
+        const totals =
+            getCategoryTotals();
+
+        const categories =
+            Object.keys(totals);
+
+
+        if (categories.length === 0) {
+
+            return;
+
+        }
+
+
+        categories.forEach(category => {
+
+            const suggested =
+                getRecommendedAmount(category, budget);
+
+            const relatedExpenses =
+                expenses.filter(
+                    expense => expense.category === category
+                );
+
+
+            if (relatedExpenses.length === 0) {
+
+                return;
+
+            }
+
+
+            const currentTotal =
+                relatedExpenses.reduce(
+                    (sum, expense) =>
+                        sum + Number(expense.amount || 0),
+                    0
+                );
+
+
+            if (currentTotal <= 0) {
+
+                return;
+
+            }
+
+
+            const ratio =
+                suggested / currentTotal;
+
+
+            relatedExpenses.forEach(expense => {
+
+                expense.amount =
+                    Math.max(0, expense.amount * ratio);
+
+            });
+
+        });
+
+
+        renderExpenses();
+
+        updatePlanner();
+
+        document
+            .getElementById("recommendationContent")
+            .classList.remove("show");
+
+    }
+
+
+    function keepMyBudget() {
+
+        document
+            .getElementById("recommendationBox")
+            .classList.remove("show");
+
+        document
+            .getElementById("recommendationContent")
+            .classList.remove("show");
+
+    }
+
+
+    function renderExpenseChart() {
+
+        const chart =
+            document.getElementById("expenseChart");
+
+        const totals =
+            getCategoryTotals();
+
+        const categories =
+            Object.keys(totals);
+
+
+        if (categories.length === 0) {
+
+            chart.innerHTML = `
+                <div class="empty-message">
+                    Add expenses to see your breakdown.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        const total =
+            getTotalExpenses();
+
+
+        chart.innerHTML = categories.map(category => {
+
+            const amount =
+                totals[category];
+
+            const percentage =
+                total > 0
+                    ? (amount / total) * 100
+                    : 0;
+
+
+            return `
+
+                <div class="chart-item">
+
+                    <div class="chart-top">
+
+                        <span>
+                            ${escapeHTML(category)}
+                        </span>
+
+                        <strong>
+                            ${formatMoney(amount)}
+                        </strong>
+
+                    </div>
+
+                    <div class="chart-track">
+
+                        <div
+                            class="chart-fill"
+                            style="width:${percentage}%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+    }
+
+
+    function saveBudget() {
+
+        const data = {
+
+            currency:
+                document.getElementById("currency").value,
+
+            income:
+                document.getElementById("income").value,
+
+            goal:
+                document.getElementById("goal").value,
+
+            purpose:
+                document.getElementById("purpose").value,
+
+            alreadySaved:
+                document.getElementById("alreadySaved").value,
+
+            timeline:
+                document.getElementById("timeline").value,
+
+            timelineAmount:
+                document.getElementById("timelineAmount").value,
+
+            expenses:
+                expenses
+
+        };
+
+
+        localStorage.setItem(
+            "smartBudgetPlanner",
+            JSON.stringify(data)
+        );
+
+
+        alert("Your budget has been saved.");
+
+    }
+
+
+    function loadBudget() {
+
+        const saved =
+            localStorage.getItem("smartBudgetPlanner");
+
+
+        if (!saved) {
+
+            alert("No saved budget found.");
+
+            return;
+
+        }
+
+
+        try {
+
+            const data =
+                JSON.parse(saved);
+
+
+            document.getElementById("currency").value =
+                data.currency || "INR";
+
+            document.getElementById("income").value =
+                data.income || "";
+
+            document.getElementById("goal").value =
+                data.goal || "";
+
+            document.getElementById("purpose").value =
+                data.purpose || "";
+
+            document.getElementById("alreadySaved").value =
+                data.alreadySaved || "";
+
+            document.getElementById("timeline").value =
+                data.timeline || "";
+
+            document.getElementById("timelineAmount").value =
+                data.timelineAmount || "";
+
+
+            expenses =
+                Array.isArray(data.expenses)
+                    ? data.expenses
+                    : [];
+
+
+            currencyChanged();
+
+            renderExpenses();
+
+            updatePlanner();
+
+            alert("Your saved budget has been loaded.");
+
+        } catch (error) {
+
+            alert("The saved budget could not be loaded.");
+
+        }
+
+    }
+
+
+    function clearSavedInformation() {
+
+        if (
+            !confirm(
+                "Are you sure you want to clear your saved budget information?"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        localStorage.removeItem("smartBudgetPlanner");
+
+        alert("Saved budget information has been cleared.");
+
+    }
+
+
+    function startNewBudget() {
+
+        if (
+            !confirm(
+                "Start a new budget? Your current entries will be cleared."
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        document.getElementById("currency").value =
+            "INR";
+
+        document.getElementById("income").value =
+            "";
+
+        document.getElementById("goal").value =
+            "";
+
+        document.getElementById("purpose").value =
+            "";
+
+        document.getElementById("alreadySaved").value =
+            "";
+
+        document.getElementById("timeline").value =
+            "";
+
+        document.getElementById("timelineAmount").value =
+            "";
+
+        document.getElementById("savedNow").value =
+            "";
+
+        document.getElementById("expenseAmount").value =
+            "";
+
+        document.getElementById("customCategory").value =
+            "";
+
+        document.getElementById("expenseCategory").value =
+            "Food";
+
+
+        expenses = [];
+
+        editingExpenseIndex = -1;
+
+
+        toggleCustomCategory();
+
+        currencyChanged();
+
+        renderExpenses();
+
+        updatePlanner();
+
+        goToSection("incomeSavingsSection");
+
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        currencyChanged();
+
+        renderExpenses();
+
+        updatePlanner();
+
+    });
+
+</script>
+
+</body>
+</html>
